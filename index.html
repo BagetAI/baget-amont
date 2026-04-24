@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amont | Signez vos clients avant la concurrence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="container">
+        <div class="logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 22L12 14L18 20L28 8" stroke="#1E293B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="28" cy="8" r="2" fill="#1E293B"/>
+            </svg>
+            <span>Amont</span>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero container">
+            <div class="message-screen">
+                <p class="eyebrow">Exclusivité pour experts-comptables</p>
+                <h1>Signez vos clients avant la concurrence</h1>
+                <p class="subtitle">Capturez les signaux de création dès J+3. Gagnez 57 jours d'avance sur les alertes BODACC classiques.</p>
+                <div class="cta-group">
+                    <a href="#signup" class="btn btn-primary">Accéder aux signaux</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="advantage container">
+            <div class="message-screen">
+                <h2>L'avantage temporel</h2>
+                <div class="timeline-viz">
+                    <div class="timeline-row">
+                        <span class="label">Amont</span>
+                        <div class="bar-container">
+                            <div class="bar primary" style="width: 15%;"></div>
+                            <span class="timestamp">J+3 : Signature</span>
+                        </div>
+                    </div>
+                    <div class="timeline-row">
+                        <span class="label">Concurrents</span>
+                        <div class="bar-container">
+                            <div class="bar muted" style="width: 85%;"></div>
+                            <span class="timestamp">J+60 : Premier contact</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="description">Nous surveillons le RNE et l'INPI en temps réel pour détecter l'intention avant même l'obtention du Kbis.</p>
+            </div>
+        </section>
+
+        <section class="workers container">
+            <div class="message-screen">
+                <h2>Automatisation Intégrale</h2>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-num">W1</div>
+                        <h3>Détection</h3>
+                        <p>Surveillance INPI/RNE/Pappers pour les signaux pré-Kbis.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-num">W2</div>
+                        <h3>Enrichissement</h3>
+                        <p>Profilage complet : CA, LinkedIn, et signaux de besoin.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-num">W3</div>
+                        <h3>Scoring</h3>
+                        <p>Modèle prédictif identifiant les leads à haute valeur.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-num">W4</div>
+                        <h3>Closing</h3>
+                        <p>Engagement automatisé. Vous n'intervenez qu'à la signature.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="signup" class="signup container">
+            <div class="message-screen">
+                <h2>Réservez votre zone</h2>
+                <p>Amont garantit une exclusivité géographique par cabinet. Vérifiez la disponibilité dans votre région.</p>
+                <form id="waitlistForm" class="minimal-form">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Votre nom" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="firm_name" name="firm_name" placeholder="Nom du cabinet" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Email professionnel" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Vérifier la disponibilité</button>
+                </form>
+                <p id="formResponse" class="form-status"></p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="container">
+        <p>&copy; 2026 Amont. Données publiques, conformité RGPD intégrale.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
