@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amont | Dashboard Pilote</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #1E293B;
+            --color-primary-light: #334155;
+            --color-bg: #FFFFFF;
+            --color-border: #E2E8F0;
+            --color-text: #1E293B;
+            --color-muted: #64748B;
+            --color-success: #10B981;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --space-unit: 8px;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            .sidebar { display: none; }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--color-bg);
+            border-right: 1px solid var(--color-border);
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 48px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--color-primary);
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--color-muted);
+            font-weight: 600;
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .nav-item.active {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .nav-item:hover:not(.active) {
+            background: #F8FAFC;
+            color: var(--color-primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 64px 80px;
+            max-width: 1200px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 40px 24px;
+            }
+        }
+
+        /* Header / Summary */
+        .page-header {
+            margin-bottom: 64px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .advantage-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--color-success);
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* Signal Feed (One Message Per Screen Style) */
+        .signal-list {
+            display: flex;
+            flex-direction: column;
+            gap: 120px; /* High whitespace between lead focus points */
+        }
+
+        .signal-card {
+            background: white;
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            padding: 48px;
+            transition: var(--transition);
+            max-width: 800px;
+        }
+
+        .signal-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+        }
+
+        .company-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .meta-data {
+            color: var(--color-muted);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-primary);
+            background: #F1F5F9;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        /* Grid for details */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .detail-item label {
+            display: block;
+            font-size: 12px;
+            color: var(--color-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .detail-item span {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Action Footer */
+        .card-actions {
+            display: flex;
+            gap: 16px;
+            border-top: 1px solid var(--color-border);
+            padding-top: 32px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn--primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn--primary:hover {
+            background: var(--color-primary-light);
+            transform: translateY(-2px);
+        }
+
+        .btn--secondary {
+            background: #F8FAFC;
+            color: var(--color-primary);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn--secondary:hover {
+            background: #F1F5F9;
+        }
+
+        /* Worker Status Floating Panel */
+        .worker-panel {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            background: var(--color-primary);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            width: 320px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .worker-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            opacity: 0.8;
+        }
+
+        .worker-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .worker-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--color-success);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--color-success);
+        }
+
+        .worker-dot.active {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">Amont</div>
+            <nav class="nav">
+                <a href="dashboard.html" class="nav-item active">Signaux Temps-Réel</a>
+                <a href="#" class="nav-item">Mes Prospects</a>
+                <a href="#" class="nav-item">Lettres de Mission</a>
+                <a href="#" class="nav-item">Paramètres Zone</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="page-header">
+                <h1>Signaux J+3 : Paris 15</h1>
+                <div class="advantage-pill">Avantage temporel moyen : +57 Jours</div>
+            </header>
+
+            <div class="signal-list">
+                <!-- Lead Card 1 -->
+                <article class="signal-card">
+                    <div class="card-header">
+                        <div>
+                            <div class="company-name">DUVAL CONSTRUCTION SAS</div>
+                            <div class="meta-data">Immatriculé il y a 72 heures • RNE-2026-0421</div>
+                        </div>
+                        <div class="status-badge">W1_DETECTION</div>
+                    </div>
+
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <label>Secteur (NAF)</label>
+                            <span>43.21A - Travaux d'installation électrique</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Dirigeant</label>
+                            <span>Jean-Pierre DUVAL (Président)</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Capital Social</label>
+                            <span>10 000 €</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Probabilité de Closing (W3)</label>
+                            <span style="color: var(--color-success)">92% (Score Prédictif)</span>
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn btn--primary">Lancer la séquence J+5</button>
+                        <button class="btn btn--secondary">Voir le profil enrichi</button>
+                    </div>
+                </article>
+
+                <!-- Lead Card 2 -->
+                <article class="signal-card">
+                    <div class="card-header">
+                        <div>
+                            <div class="company-name">TECH-VITAL SOLUTIONS</div>
+                            <div class="meta-data">Dépôt d'actes détecté • INPI_PRE_KBIS</div>
+                        </div>
+                        <div class="status-badge">W1_DETECTION</div>
+                    </div>
+
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <label>Secteur (NAF)</label>
+                            <span>62.01Z - Programmation informatique</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Signal</label>
+                            <span>Constitution (Statuts déposés)</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Enrichissement (W2)</label>
+                            <span>LinkedIn & WhatsApp trouvés</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Zone Géographique</label>
+                            <span>Paris (75015) - Exclusivité Active</span>
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn btn--primary">Envoyer Lettre de Mission</button>
+                        <button class="btn btn--secondary">Mettre en attente</button>
+                    </div>
+                </article>
+            </div>
+        </main>
+    </div>
+
+    <!-- Workers Status Floating Panel -->
+    <div class="worker-panel">
+        <div class="worker-title">
+            <span>WORKERS ACTIFS</span>
+            <span>24/04/2026</span>
+        </div>
+        <div class="worker-row">
+            <div class="worker-dot active"></div>
+            <span>W1_DÉTECTION : Flux RNE Synchronisé</span>
+        </div>
+        <div class="worker-row">
+            <div class="worker-dot active"></div>
+            <span>W2_ENRICHISSEMENT : Social API OK</span>
+        </div>
+        <div class="worker-row">
+            <div class="worker-dot active"></div>
+            <span>W3_SCORING : Modèle prédictif prêt</span>
+        </div>
+        <div class="worker-row">
+            <div class="worker-dot"></div>
+            <span>W4_CLOSING : Séquences automatisées</span>
+        </div>
+    </div>
+</body>
+</html>
