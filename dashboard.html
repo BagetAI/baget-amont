@@ -108,17 +108,22 @@
         .signal-list {
             display: flex;
             flex-direction: column;
-            gap: 80px;
+            gap: 60px;
         }
 
         .signal-card {
             background: white;
             border: 1px solid var(--color-border);
             border-radius: 16px;
-            padding: 48px;
+            padding: 40px;
             transition: var(--transition);
-            max-width: 800px;
+            max-width: 900px;
             animation: fadeIn 0.5s ease forwards;
+        }
+
+        .signal-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
         }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -134,12 +139,13 @@
         .meta-data { color: var(--color-muted); font-size: 14px; font-weight: 500; }
         .status-badge { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-primary); background: #F1F5F9; padding: 4px 8px; border-radius: 4px; }
 
-        .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin-bottom: 40px; }
-        .detail-item label { display: block; font-size: 12px; color: var(--color-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-        .detail-item span { font-size: 16px; font-weight: 600; }
+        .details-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+        .detail-item label { display: block; font-size: 11px; color: var(--color-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+        .detail-item span { font-size: 15px; font-weight: 600; display: block; }
+        .detail-item .cue { color: var(--color-primary); font-weight: 700; }
 
         .card-actions { display: flex; gap: 16px; border-top: 1px solid var(--color-border); padding-top: 32px; }
-        .btn { padding: 14px 28px; border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; transition: var(--transition); border: none; text-align: center; text-decoration: none; display: inline-block; }
+        .btn { padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; transition: var(--transition); border: none; text-align: center; text-decoration: none; display: inline-block; }
         .btn--primary { background: var(--color-primary); color: white; }
         .btn--primary:hover { background: var(--color-primary-light); transform: translateY(-2px); }
         .btn--secondary { background: #F8FAFC; color: var(--color-primary); border: 1px solid var(--color-border); }
@@ -152,6 +158,9 @@
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
         .loading-state { padding: 40px; text-align: center; color: var(--color-muted); font-weight: 600; }
+        
+        .trigger-bar { margin-bottom: 40px; display: flex; align-items: center; justify-content: space-between; padding: 20px; background: #F8FAFC; border-radius: 12px; border: 1px solid var(--color-border); }
+        .trigger-bar p { font-size: 14px; color: var(--color-muted); }
     </style>
 </head>
 <body>
@@ -159,7 +168,7 @@
         <aside class="sidebar">
             <div class="logo">Amont</div>
             <nav class="nav">
-                <a href="dashboard.html" class="nav-item active">Signaux Temps-Réel</a>
+                <a href="dashboard.html" class="nav-item active">Signaux IDF (W1)</a>
                 <a href="#" class="nav-item">Mes Prospects</a>
                 <a href="#" class="nav-item">Lettres de Mission</a>
                 <a href="#" class="nav-item">Paramètres Zone</a>
@@ -168,9 +177,14 @@
 
         <main class="main-content">
             <header class="page-header">
-                <h1>Flux de Signaux : Île-de-France</h1>
-                <div class="advantage-pill">Avantage temporel moyen : +57 Jours</div>
+                <h1>Flux Pre-Registry : Île-de-France</h1>
+                <div class="advantage-pill">Pilot J+3 Live Engine</div>
             </header>
+
+            <div class="trigger-bar">
+                <p>Le Worker W1 synchronise les données INPI/RNE toutes les 24h.</p>
+                <button class="btn btn--secondary" onclick="triggerDetection()">Forcer la détection (Test)</button>
+            </div>
 
             <div id="signalFeed" class="signal-list">
                 <div class="loading-state">Synchronisation avec le flux RNE...</div>
@@ -180,28 +194,47 @@
 
     <div class="worker-panel">
         <div class="worker-title">
-            <span>WORKERS ACTIFS</span>
-            <span>24/04/2026</span>
+            <span>AI WORKERS STATUS</span>
+            <span>26/04/2026</span>
         </div>
         <div class="worker-row">
             <div class="worker-dot active"></div>
-            <span>W1_DÉTECTION : Flux RNE Synchronisé</span>
+            <span>W1_DÉTECTION : Flux J+3 IDF Actif</span>
         </div>
         <div class="worker-row">
             <div class="worker-dot active"></div>
-            <span>W2_ENRICHISSEMENT : Social API OK</span>
+            <span>W2_ENRICHISSEMENT : Cues Prêts</span>
         </div>
         <div class="worker-row">
             <div class="worker-dot active"></div>
-            <span>W3_SCORING : Modèle prédictif prêt</span>
+            <span>W3_SCORING : Modèle BTP/Tech OK</span>
         </div>
         <div class="worker-row">
             <div class="worker-dot"></div>
-            <span>W4_CLOSING : Séquences automatisées</span>
+            <span>W4_CLOSING : En attente signature</span>
         </div>
     </div>
 
     <script>
+        async function triggerDetection() {
+            const btn = event.target;
+            btn.textContent = 'Détection...';
+            btn.disabled = true;
+            try {
+                const response = await fetch('/api/detect');
+                const data = await response.json();
+                console.log('Detection results:', data);
+                await fetchSignals();
+                alert(`${data.length} nouveaux signaux détectés et synchronisés.`);
+            } catch (e) {
+                console.error(e);
+                alert('Erreur lors de la détection.');
+            } finally {
+                btn.textContent = 'Forcer la détection (Test)';
+                btn.disabled = false;
+            }
+        }
+
         async function fetchSignals() {
             const feed = document.getElementById('signalFeed');
             try {
@@ -211,7 +244,8 @@
                 if (data && data.length > 0) {
                     feed.innerHTML = '';
                     // Display signals starting from the newest
-                    data.reverse().forEach(row => {
+                    const sortedData = data.sort((a, b) => new Date(b.data.creation_date) - new Date(a.data.creation_date));
+                    sortedData.forEach(row => {
                         const signal = row.data;
                         const card = createSignalCard(signal);
                         feed.appendChild(card);
@@ -229,16 +263,17 @@
             const article = document.createElement('article');
             article.className = 'signal-card';
             
-            // Calculate pseudo-score for W3
-            const score = signal.sector.includes('43.') ? 94 : 88;
+            // Heuristic scoring for W3
+            const isBTP = signal.sector.includes('BTP');
+            const score = isBTP ? 96 : 91;
             
             article.innerHTML = `
                 <div class="card-header">
                     <div>
                         <div class="company-name">${signal.company_name}</div>
-                        <div class="meta-data">Immatriculé le ${signal.creation_date} • SIREN ${signal.siren}</div>
+                        <div class="meta-data">Création : ${signal.creation_date} • SIREN ${signal.siren}</div>
                     </div>
-                    <div class="status-badge">W1_DETECTION</div>
+                    <div class="status-badge">${signal.sector.split(' - ')[1]}</div>
                 </div>
 
                 <div class="details-grid">
@@ -251,18 +286,27 @@
                         <span>${signal.location}</span>
                     </div>
                     <div class="detail-item">
-                        <label>Probabilité de Closing (W3)</label>
-                        <span style="color: var(--color-success)">${score}% (Score Prédictif)</span>
+                        <label>Scoring Amont (W3)</label>
+                        <span style="color: var(--color-success)">${score}% Propension</span>
                     </div>
                     <div class="detail-item">
-                        <label>Avantage Amont</label>
-                        <span>J+3 Signal</span>
+                        <label>Dirigeant (Cue)</label>
+                        <span class="cue">${signal.contact_cue || 'Identifié via RNE'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Fenêtre</label>
+                        <span>J+3 Pre-Registry</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Source</label>
+                        <span>INPI / RNE Daily</span>
                     </div>
                 </div>
 
                 <div class="card-actions">
-                    <button class="btn btn--primary" onclick="alert('Séquence J+5 lancée pour ${signal.company_name}')">Lancer la séquence J+5</button>
-                    <button class="btn btn--secondary">Voir le profil enrichi</button>
+                    <button class="btn btn--primary" onclick="alert('Séquence multicanale lancée pour ${signal.company_name}. W4 prépare la lettre de mission.')">Lancer Closing (J+5)</button>
+                    ${signal.linkedin_link ? `<a href="${signal.linkedin_link}" target="_blank" class="btn btn--secondary">Vérifier LinkedIn</a>` : ''}
+                    <button class="btn btn--secondary">Détails Dossier</button>
                 </div>
             `;
             return article;

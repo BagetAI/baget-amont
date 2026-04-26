@@ -1,50 +1,76 @@
-// Vercel Serverless Function: api/detect.js
-// Amont W1_DÉTECTION: Primary signal detection engine for French company creations
+/**
+ * Amont W1_DÉTECTION Engine
+ * Primary worker for French pre-registry signal detection (J+3 window)
+ * 
+ * Filters: Île-de-France, BTP & Tech/Startup sectors
+ */
 
 export default async function handler(req, res) {
     const INPI_API_KEY = process.env.INPI_API_KEY;
     const DB_ID = '86dc88ea-583d-4ed6-9d53-f0870898688d';
     
-    // Safety check for authorization
-    if (req.method !== 'POST' && req.query.key !== INPI_API_KEY) {
-        // In production, this would be a secure webhook or cron trigger
-    }
+    // In production, this would be a secure cron trigger or webhook
+    // For the pilot, we allow GET requests for manual triggering during testing
 
     try {
-        console.log('[W1_DETECTION] Initiating RNE flux synchronization...');
+        console.log('[W1_DETECTION] Initiating synchronized RNE flux crawl...');
 
-        // 1. Fetch from INPI Flux (Simulated for this implementation)
-        // In a real environment, we query https://data.inpi.fr/opendata/flore 
-        // using the daily diff files or the real-time search API.
-        const signals = await fetchRecentSignals();
+        // 1. Fetch from RNE/Pappers flux
+        // In a real-world scenario, we fetch the daily diff files from INPI or Pappers
+        const rawSignals = await fetchRNEFlux();
 
-        // 2. W1_DÉTECTION Logic: Temporal Filtering
-        // We calculate the delta between Today and Creation Date.
-        // Target: Delta <= 3 days (The J+3 Advantage)
-        const highIntentSignals = signals.filter(signal => {
+        // 2. W1_DÉTECTION Logic: Multidimensional Filtering
+        const processedSignals = rawSignals.filter(signal => {
+            // A. Temporal Window: J+3 (Created 1-3 days ago)
             const creationDate = new Date(signal.creation_date);
-            const today = new Date('2026-04-24'); // Today's fixed date for the pilot
-            const diffDays = Math.ceil((today - creationDate) / (1000 * 60 * 60 * 24));
+            const today = new Date('2026-04-26'); // Reference date
+            const diffTime = Math.abs(today - creationDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             
-            // Log signal for observability
-            console.log(`[W1] Evaluating ${signal.company_name}: J+${diffDays}`);
+            const isInTemporalWindow = diffDays <= 3;
+
+            // B. Geographic Filter: Île-de-France (IDF)
+            const idfPrefixes = ['75', '77', '78', '91', '92', '93', '94', '95'];
+            const isIDF = idfPrefixes.some(prefix => signal.postal_code.startsWith(prefix));
+
+            // C. Sector Filter: BTP & Startup/Tech
+            // BTP: NAF 43.xx
+            // Tech/Startup: NAF 62.xx, 63.xx, 70.22Z
+            const isBTP = signal.naf_code.startsWith('43');
+            const isTech = signal.naf_code.startsWith('62') || signal.naf_code.startsWith('63') || signal.naf_code === '7022Z';
             
-            return diffDays <= 3; // J+3 filter
+            const isInTargetSector = isBTP || isTech;
+
+            return isInTemporalWindow && isIDF && isInTargetSector;
+        }).map(signal => {
+            // 3. Enrichment: Contact Cues Generation
+            // We generate cues for the W2_ENRICHISSEMENT worker
+            const founderCue = signal.dirigeant_nom ? `${signal.dirigeant_prenom} ${signal.dirigeant_nom}` : "Fondateur non identifié";
+            const linkedinSearch = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(signal.company_name + ' ' + founderCue)}`;
+
+            return {
+                ...signal,
+                sector_group: signal.naf_code.startsWith('43') ? 'BTP' : 'TECH/STARTUP',
+                contact_cue: founderCue,
+                linkedin_link: linkedinSearch,
+                detected_at: new Date().toISOString()
+            };
         });
 
-        // 3. Persistent Storage (Baget DB)
-        // We push the high-intent signals to the Lead_Signals database
-        if (highIntentSignals.length > 0) {
-            const rows = highIntentSignals.map(s => ({
+        // 4. Persistence to Baget Database
+        if (processedSignals.length > 0) {
+            const rows = processedSignals.map(s => ({
                 data: {
                     company_name: s.company_name,
                     siren: s.siren,
                     creation_date: s.creation_date,
-                    sector: s.sector,
-                    location: s.location,
-                    source: 'INPI_RNE_DAILY'
+                    sector: `${s.naf_code} - ${s.sector_group}`,
+                    location: `${s.postal_code} ${s.city}`,
+                    source: 'RNE_PRE_REGISTRY_FLUX',
+                    contact_cue: s.contact_cue,
+                    linkedin_link: s.linkedin_link
                 },
-                externalKey: s.siren // Deduplication on SIREN
+                externalKey: s.siren // Deduplication
             }));
 
             await fetch(`https://baget.ai/api/public/databases/${DB_ID}/rows`, {
@@ -53,37 +79,83 @@ export default async function handler(req, res) {
                 body: JSON.stringify({ rows })
             });
 
-            console.log(`[W1_SUCCESS] ${highIntentSignals.length} high-intent signals logged.`);
+            console.log(`[W1_SUCCESS] ${processedSignals.length} high-intent signals synced to DB.`);
         }
 
-        return res.status(200).json({
-            status: 'success',
-            processed: signals.length,
-            flagged: highIntentSignals.length,
-            timestamp: new Date().toISOString()
-        });
+        // Return the clean JSON array as requested
+        return res.status(200).json(processedSignals);
 
     } catch (error) {
-        console.error('[W1_ERROR] Signal detection failed:', error);
-        return res.status(500).json({ error: 'Internal worker error' });
+        console.error('[W1_ERROR] Engine failure:', error);
+        return res.status(500).json({ error: 'Worker synchronization failed' });
     }
 }
 
 /**
- * MOCK: Simulates the INPI RNE Flux response for the first 10 signals
- * In production, this would use fetch() with process.env.INPI_API_KEY
+ * MOCK: Represents the high-fidelity RNE daily flux for April 26, 2026
+ * These are real-world data shapes for BTP and Tech startups in IDF
  */
-async function fetchRecentSignals() {
+async function fetchRNEFlux() {
     return [
-        { company_name: "DUVAL CONSTRUCTION SAS", siren: "902144321", creation_date: "2026-04-21", sector: "43.21A - Installation électrique", location: "Paris (75015)" },
-        { company_name: "TECH-VITAL SOLUTIONS", siren: "903211567", creation_date: "2026-04-23", sector: "62.01Z - Programmation informatique", location: "Paris (75008)" },
-        { company_name: "L'ARTISAN DU RHÔNE", siren: "904122345", creation_date: "2026-04-22", sector: "43.22A - Plomberie", location: "Lyon (69002)" },
-        { company_name: "NEO-FINANCE LAB", siren: "905633456", creation_date: "2026-04-24", sector: "64.19Z - Fintech", location: "Bordeaux (33000)" },
-        { company_name: "SANTÉ CONNECT MARSEILLE", siren: "906744567", creation_date: "2026-04-22", sector: "86.21Z - Activité médicale", location: "Marseille (13006)" },
-        { company_name: "BASTION SÉCURITÉ", siren: "907855678", creation_date: "2026-04-23", sector: "43.39Z - Second œuvre", location: "Versailles (78000)" },
-        { company_name: "HORIZON GREEN ENERGY", siren: "908966789", creation_date: "2026-04-21", sector: "35.11Z - Production électricité", location: "Nantes (44000)" },
-        { company_name: "BOIS & DESIGN NORD", siren: "909077890", creation_date: "2026-04-22", sector: "43.32A - Menuiserie", location: "Lille (59000)" },
-        { company_name: "COMPTA-MODERNE IDF", siren: "910188901", creation_date: "2026-04-24", sector: "69.20Z - Comptabilité", location: "Paris (75017)" },
-        { company_name: "CYBER-SHIELD FR", siren: "911299012", creation_date: "2026-04-23", sector: "62.02Z - Conseil informatique", location: "Paris (75016)" }
+        { 
+            company_name: "BATIPRO IDF SERVICES", 
+            siren: "905144882", 
+            creation_date: "2026-04-24", 
+            naf_code: "4321A", 
+            postal_code: "75011", 
+            city: "Paris",
+            dirigeant_nom: "LEFEBVRE",
+            dirigeant_prenom: "Thomas"
+        },
+        { 
+            company_name: "CYBER-MIND AI", 
+            siren: "906211334", 
+            creation_date: "2026-04-25", 
+            naf_code: "6201Z", 
+            postal_code: "92100", 
+            city: "Boulogne-Billancourt",
+            dirigeant_nom: "KHAN",
+            dirigeant_prenom: "Sarah"
+        },
+        { 
+            company_name: "RENOV'TOIT 77", 
+            siren: "907322445", 
+            creation_date: "2026-04-23", 
+            naf_code: "4391A", 
+            postal_code: "77000", 
+            city: "Melun",
+            dirigeant_nom: "GARCIA",
+            dirigeant_prenom: "Julien"
+        },
+        { 
+            company_name: "DATA-CORE SYSTEMS", 
+            siren: "908433556", 
+            creation_date: "2026-04-26", 
+            naf_code: "6311Z", 
+            postal_code: "75008", 
+            city: "Paris",
+            dirigeant_nom: "CHEN",
+            dirigeant_prenom: "David"
+        },
+        { 
+            company_name: "STRUCTURE & BOIS", 
+            siren: "909544667", 
+            creation_date: "2026-04-24", 
+            naf_code: "4332A", 
+            postal_code: "94200", 
+            city: "Ivry-sur-Seine",
+            dirigeant_nom: "MOREL",
+            dirigeant_prenom: "Alice"
+        },
+        { 
+            company_name: "STRAT-DEV CONSULTING", 
+            siren: "910655778", 
+            creation_date: "2026-04-25", 
+            naf_code: "7022Z", 
+            postal_code: "92000", 
+            city: "Nanterre",
+            dirigeant_nom: "BERNARD",
+            dirigeant_prenom: "Marc"
+        }
     ];
 }
