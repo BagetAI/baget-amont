@@ -23,6 +23,12 @@ function DashboardContent() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [closingStatus, setClosingStatus] = useState<Record<string, string>>({});
+  const [billingStatus, setBillingStatus] = useState({
+    plan: 'Programme Pilote J+21',
+    status: 'Actif',
+    trialEnd: '18 Mai 2026',
+    price: '897€ HT / mois'
+  });
 
   useEffect(() => {
     fetchSignals();
@@ -67,6 +73,17 @@ function DashboardContent() {
           <a href="#" className="p-3 bg-slate-900 text-white rounded-lg font-semibold text-sm">Signaux IDF ({zip})</a>
           <a href="#" className="p-3 text-slate-500 hover:bg-slate-50 rounded-lg font-semibold text-sm transition-colors">Mes Prospects</a>
           <a href="#" className="p-3 text-slate-500 hover:bg-slate-50 rounded-lg font-semibold text-sm transition-colors">Configuration W4</a>
+          <div className="mt-auto pt-10 border-t border-slate-100">
+            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Abonnement</p>
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+              <p className="text-xs font-bold text-slate-900 mb-1">{billingStatus.plan}</p>
+              <p className="text-[10px] text-slate-500 mb-3">Fin du pilote : {billingStatus.trialEnd}</p>
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-tight">{billingStatus.status}</span>
+              </div>
+            </div>
+          </div>
         </nav>
       </aside>
 
