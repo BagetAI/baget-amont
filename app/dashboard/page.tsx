@@ -22,8 +22,9 @@ function DashboardContent() {
   const zip = searchParams.get('zip') || '75015'; 
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
+  const [detecting, setDetecting] = useState(false);
   const [closingStatus, setClosingStatus] = useState<Record<string, string>>({});
-  const [billingStatus, setBillingStatus] = useState({
+  const [billingStatus] = useState({
     plan: 'Programme Pilote J+21',
     status: 'Actif',
     trialEnd: '18 Mai 2026',
@@ -32,7 +33,7 @@ function DashboardContent() {
 
   useEffect(() => {
     fetchSignals();
-    const interval = setInterval(fetchSignals, 10000);
+    const interval = setInterval(fetchSignals, 15000);
     return () => clearInterval(interval);
   }, [zip]);
 
@@ -50,6 +51,18 @@ function DashboardContent() {
     }
   };
 
+  const triggerDetection = async () => {
+    setDetecting(true);
+    try {
+      await fetch('/api/detect');
+      await fetchSignals();
+    } catch (e) {
+      console.error('Detection failed', e);
+    } finally {
+      setDetecting(false);
+    }
+  };
+
   const handleClosing = async (lead: Lead) => {
     setClosingStatus(prev => ({ ...prev, [lead.id]: 'Initialisation...' }));
     
@@ -57,22 +70,22 @@ function DashboardContent() {
       const result = await initiateW4Closing(lead.id, lead.company_name, lead.contact_cue);
       if (result.success) {
         setClosingStatus(prev => ({ ...prev, [lead.id]: 'W4 Lancé ✅' }));
-        alert(result.message);
       }
     } catch (e) {
       setClosingStatus(prev => ({ ...prev, [lead.id]: 'Échec' }));
-      console.error(e);
     }
   };
 
   return (
     <div className="flex min-h-screen bg-white">
+      {/* Sidebar */}
       <aside className="w-72 border-r border-slate-200 p-10 flex flex-col gap-12 sticky top-0 h-screen hidden lg:flex">
         <div className="text-2xl font-bold tracking-tight text-slate-900">Amont</div>
         <nav className="flex flex-col gap-3">
           <a href="#" className="p-3 bg-slate-900 text-white rounded-lg font-semibold text-sm">Signaux IDF ({zip})</a>
           <a href="#" className="p-3 text-slate-500 hover:bg-slate-50 rounded-lg font-semibold text-sm transition-colors">Mes Prospects</a>
           <a href="#" className="p-3 text-slate-500 hover:bg-slate-50 rounded-lg font-semibold text-sm transition-colors">Configuration W4</a>
+          
           <div className="mt-auto pt-10 border-t border-slate-100">
             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Abonnement</p>
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
@@ -87,37 +100,47 @@ function DashboardContent() {
         </nav>
       </aside>
 
+      {/* Main */}
       <main className="flex-1 p-10 lg:p-16 max-w-5xl">
-        <header className="mb-16">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold text-slate-900">Flux J+3 : Territoire {zip}</h1>
-            <div className="advantage-pill">IA Scoring Actif</div>
+        <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <div className="flex items-center gap-4 mb-4">
+              <h1 className="text-3xl font-bold text-slate-900">Territoire {zip}</h1>
+              <div className="advantage-pill">W1-W3 Intelligence Active</div>
+            </div>
+            <p className="text-slate-500 font-medium">Capture J+3 : Détection RNE + Enrichissement Pappers + Scoring IA.</p>
           </div>
-          <p className="text-slate-500 font-medium">Capture en temps réel des créations d'entreprises sur votre zone exclusive.</p>
+          <button 
+            onClick={triggerDetection}
+            disabled={detecting}
+            className="px-6 py-3 border-2 border-slate-200 text-slate-900 rounded-xl font-bold text-sm hover:bg-slate-50 disabled:opacity-50 transition-all"
+          >
+            {detecting ? 'Détection en cours...' : 'Forcer Sync RNE/W2'}
+          </button>
         </header>
 
         {loading ? (
-          <div className="text-slate-400 font-medium animate-pulse">Synchronisation avec le flux RNE...</div>
+          <div className="py-20 text-center text-slate-400 font-medium animate-pulse">Initialisation du flux...</div>
         ) : (
           <div className="flex flex-col gap-10">
             {leads.length === 0 ? (
               <div className="p-20 text-center border-2 border-dashed border-slate-100 rounded-3xl text-slate-400 font-medium">
-                Aucun signal détecté sur {zip} ce jour.
+                Aucun signal détecté sur {zip} pour le moment.
               </div>
             ) : (
               leads.map(lead => (
-                <article key={lead.id} className="bg-white border border-slate-200 rounded-2xl p-8 hover:border-slate-900 hover:shadow-2xl hover:shadow-slate-100 transition-all duration-300">
+                <article key={lead.id} className="bg-white border border-slate-200 rounded-2xl p-8 hover:border-slate-900 transition-all duration-300 group">
                   <div className="flex justify-between items-start mb-6">
                     <div>
-                      <h2 className="text-2xl font-bold text-slate-900 leading-tight">{lead.company_name}</h2>
-                      <p className="text-xs text-slate-500 font-bold uppercase mt-1">SIREN {lead.siren} • Création le {lead.creation_date}</p>
+                      <h2 className="text-2xl font-bold text-slate-900 leading-tight group-hover:text-slate-950">{lead.company_name}</h2>
+                      <p className="text-xs text-slate-500 font-bold uppercase mt-1">SIREN {lead.siren} • J+3 Advantage</p>
                     </div>
-                    <div className={`px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest text-white uppercase ${lead.score > 80 ? 'bg-emerald-500' : 'bg-slate-900'}`}>
+                    <div className={`px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest text-white uppercase ${lead.score > 80 ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-slate-900'}`}>
                       Score {lead.score}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-8 border-y border-slate-50 py-6">
                     <div>
                       <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Verticale</p>
                       <p className="text-sm font-bold text-slate-800">{lead.sector}</p>
@@ -127,7 +150,7 @@ function DashboardContent() {
                       <p className="text-sm font-bold text-slate-800">{lead.location}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Contact</p>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Fondateur</p>
                       <p className="text-sm font-bold text-slate-900">{lead.contact_cue}</p>
                     </div>
                     <div>
@@ -136,15 +159,18 @@ function DashboardContent() {
                     </div>
                   </div>
 
-                  <div className="p-5 bg-slate-50 border-l-4 border-slate-200 text-sm text-slate-600 italic leading-relaxed mb-10">
-                    <span className="font-bold text-slate-900 mr-2">W3 Rationale:</span> {lead.rationale}
+                  <div className="mb-10">
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-3">Enrichissement W2 & Scoring W3</p>
+                    <div className="p-6 bg-slate-50 rounded-xl text-sm text-slate-700 border-l-4 border-slate-900">
+                      <p className="leading-relaxed whitespace-pre-line">{lead.rationale}</p>
+                    </div>
                   </div>
 
                   <div className="flex flex-wrap gap-4">
                     <button 
                       onClick={() => handleClosing(lead)}
                       disabled={!!closingStatus[lead.id]}
-                      className="flex-1 lg:flex-none px-8 py-4 bg-slate-900 text-white rounded-xl font-bold text-sm hover:scale-[1.02] active:scale-[0.98] disabled:bg-slate-200 transition-all"
+                      className="flex-1 lg:flex-none px-8 py-4 bg-slate-900 text-white rounded-xl font-bold text-sm hover:translate-y-[-2px] active:translate-y-0 disabled:bg-slate-200 transition-all shadow-lg shadow-slate-100"
                     >
                       {closingStatus[lead.id] || 'Lancer Closing W4'}
                     </button>
@@ -163,26 +189,31 @@ function DashboardContent() {
         )}
       </main>
 
-      <div className="fixed bottom-10 right-10 bg-slate-950 text-white p-8 rounded-3xl w-80 shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-slate-800 z-50">
+      {/* Floating System Status */}
+      <div className="fixed bottom-10 right-10 bg-slate-950 text-white p-8 rounded-3xl w-80 shadow-2xl border border-slate-800 z-50">
         <div className="flex justify-between items-center mb-6">
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">System Workers</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Amont System</span>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold text-emerald-500">Live</span>
-            <div className="w-2 h-2 bg-emerald-500 rounded-full pulse"></div>
+            <span className="text-[10px] font-bold text-emerald-500">Online</span>
+            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
           </div>
         </div>
         <div className="space-y-4">
-          <div className="flex items-center gap-4 group">
-            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_10px_#10b981]"></div>
-            <span className="text-xs font-bold text-slate-300 group-hover:text-white transition-colors">W1_DÉTECTION : ACTIF</span>
+          <div className="flex items-center gap-4">
+            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+            <span className="text-xs font-bold text-slate-300 uppercase">W1_DÉTECTION : OK</span>
           </div>
-          <div className="flex items-center gap-4 group">
-            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_10px_#10b981]"></div>
-            <span className="text-xs font-bold text-slate-300 group-hover:text-white transition-colors">W3_SCORING : LLM INTENT</span>
+          <div className="flex items-center gap-4">
+            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+            <span className="text-xs font-bold text-slate-300 uppercase">W2_ENRICH : PAPPERS LIVE</span>
           </div>
-          <div className="flex items-center gap-4 group opacity-50">
+          <div className="flex items-center gap-4">
+            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+            <span className="text-xs font-bold text-slate-300 uppercase">W3_SCORING : LLM ACTIVE</span>
+          </div>
+          <div className="flex items-center gap-4 opacity-30">
             <div className="w-1.5 h-1.5 bg-slate-600 rounded-full"></div>
-            <span className="text-xs font-bold text-slate-500">W4_CLOSING : IDLE</span>
+            <span className="text-xs font-bold text-slate-600 uppercase">W4_CLOSING : READY</span>
           </div>
         </div>
       </div>
@@ -192,7 +223,7 @@ function DashboardContent() {
 
 export default function DashboardPage() {
   return (
-    <Suspense fallback={<div className="p-20 text-slate-400 font-bold">Chargement du dashboard...</div>}>
+    <Suspense fallback={<div className="p-20 text-slate-400 font-bold">Initialisation de l'IA...</div>}>
       <DashboardContent />
     </Suspense>
   );

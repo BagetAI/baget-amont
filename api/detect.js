@@ -1,17 +1,20 @@
 /**
- * Amont W1_DÉTECTION Engine + W3_SCORING Integration
+ * Amont Worker Engine
+ * W1_DÉTECTION -> W2_ENRICHISSEMENT -> W3_SCORING
  */
 import { calculateW3Score } from '../lib/scoring.js';
+import { enrichSignal } from '../lib/enrichment';
 
 export default async function handler(req, res) {
-    const DB_ID = '88c0ef02-5c38-46d5-8c77-7c01986fbbd1'; // v2 with score column
+    const DB_ID = '88c0ef02-5c38-46d5-8c77-7c01986fbbd1'; 
     
     try {
-        console.log('[W1_W3] Initiating synchronized RNE flux crawl and scoring...');
+        console.log('[AMONT_WORKER] Initiating W1 -> W2 -> W3 Pipeline...');
 
+        // W1: DETECTION (Fetch raw signals)
         const rawSignals = await fetchRNEFlux();
 
-        // 1. Filter IDF & Sectors
+        // Filter IDF & Target Sectors
         const targetSignals = rawSignals.filter(signal => {
             const idfPrefixes = ['75', '77', '78', '91', '92', '93', '94', '95'];
             const isIDF = idfPrefixes.some(prefix => signal.postal_code.startsWith(prefix));
@@ -20,25 +23,32 @@ export default async function handler(req, res) {
             return isIDF && (isBTP || isTech);
         });
 
-        // 2. Score each signal
         const processedSignals = [];
+
         for (const s of targetSignals) {
-            const scoreData = await calculateW3Score(s);
+            // W2: ENRICHISSEMENT
+            const enriched = await enrichSignal(s.siren);
             
-            const founderCue = s.dirigeant_nom ? `${s.dirigeant_prenom} ${s.dirigeant_nom}` : "Fondateur via RNE";
-            const linkedinSearch = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(s.company_name + ' ' + founderCue)}`;
+            // W3: SCORING
+            const scoreData = await calculateW3Score(s, enriched);
+            
+            const founderName = enriched?.founder_name || `${s.dirigeant_prenom} ${s.dirigeant_nom}`;
+            const linkedinSearch = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(s.company_name + ' ' + founderName)}`;
+
+            // Combine rationale with growth signals
+            const fullRationale = `${scoreData.rationale} [Signaux: ${enriched?.growth_signals?.join(', ')}] [CA: ${enriched?.ca}]`;
 
             processedSignals.push({
                 ...s,
                 score: scoreData.score,
-                rationale: scoreData.rationale,
+                rationale: fullRationale,
                 sector_group: s.naf_code.startsWith('43') ? 'BTP' : 'TECH/STARTUP',
-                contact_cue: founderCue,
+                contact_cue: founderName,
                 linkedin_link: linkedinSearch
             });
         }
 
-        // 3. Persistence
+        // Persistence to Agent Database
         if (processedSignals.length > 0) {
             const rows = processedSignals.map(s => ({
                 data: {
@@ -49,7 +59,7 @@ export default async function handler(req, res) {
                     location: `${s.postal_code} ${s.city}`,
                     score: s.score,
                     rationale: s.rationale,
-                    source: 'RNE_PRE_REGISTRY_FLUX',
+                    source: 'AMONT_J+3_ENRICHED_FLUX',
                     contact_cue: s.contact_cue,
                     linkedin_link: s.linkedin_link
                 },
@@ -62,19 +72,24 @@ export default async function handler(req, res) {
                 body: JSON.stringify({ rows })
             });
 
-            console.log(`[W1_W3_SUCCESS] ${processedSignals.length} scored signals synced.`);
+            console.log(`[AMONT_WORKER_SUCCESS] ${processedSignals.length} leads enriched and scored.`);
         }
 
-        return res.status(200).json(processedSignals);
+        return res.status(200).json({
+            success: true,
+            count: processedSignals.length,
+            leads: processedSignals
+        });
 
     } catch (error) {
-        console.error('[W1_W3_ERROR] Engine failure:', error);
-        return res.status(500).json({ error: 'Worker synchronization failed' });
+        console.error('[AMONT_WORKER_ERROR] Pipeline failed:', error);
+        return res.status(500).json({ error: 'Worker pipeline failed' });
     }
 }
 
 async function fetchRNEFlux() {
-    // Enriched mock data for April 27, 2026
+    // Simulated RNE Flux for the demo / current date
+    // In production, this would call the INPI / data.gouv API
     return [
         { 
             company_name: "BATIPRO IDF SERVICES", 
@@ -101,19 +116,6 @@ async function fetchRNEFlux() {
             associates_count: 3,
             dirigeant_nom: "KHAN",
             dirigeant_prenom: "Sarah"
-        },
-        { 
-            company_name: "DATA-CORE SYSTEMS", 
-            siren: "908433556", 
-            creation_date: "2026-04-26", 
-            naf_code: "6311Z", 
-            postal_code: "75008", 
-            city: "Paris",
-            legal_form: "SAS",
-            capital: 2000,
-            associates_count: 2,
-            dirigeant_nom: "CHEN",
-            dirigeant_prenom: "David"
         },
         { 
             company_name: "STRUCTURE & BOIS", 
