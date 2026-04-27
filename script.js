@@ -105,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="success-message">
                             <h3>Territoire Verrouillé.</h3>
                             <p>Le secteur <strong>${postalCode}</strong> vous est réservé pour 21 jours.</p>
-                            <p>Un consultant Amont vous contactera sous 24h pour configurer vos Workers W1-W4.</p>
-                            <a href="dashboard.html" class="btn btn-primary" style="margin-top: 20px">Accéder au Dashboard</a>
+                            <p>Accédez maintenant à votre flux J+3 exclusif.</p>
+                            <a href="/dashboard?zip=${postalCode}" class="btn btn-primary" style="margin-top: 24px; display: inline-block;">Accéder au Dashboard</a>
                         </div>
                     `;
                     showResult(`Zone ${postalCode} réservée avec succès.`, 'available');

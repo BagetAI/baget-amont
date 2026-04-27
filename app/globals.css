@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #1E293B;
+  --primary-light: #334155;
+  --bg: #FFFFFF;
+  --border: #E2E8F0;
+  --text: #1E293B;
+  --muted: #64748B;
+  --success: #10B981;
+}
+
+body {
+  color: var(--text);
+  background: var(--bg);
+}
+
+.advantage-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.worker-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--success);
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
