@@ -23,6 +23,7 @@ function DashboardContent() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [detecting, setDetecting] = useState(false);
+  const [outreaching, setOutreaching] = useState(false);
   const [closingStatus, setClosingStatus] = useState<Record<string, string>>({});
   const [generatedContracts, setGeneratedContracts] = useState<Record<string, string>>({});
   const [billingStatus] = useState({
@@ -55,12 +56,31 @@ function DashboardContent() {
   const triggerDetection = async () => {
     setDetecting(true);
     try {
-      await fetch('/api/detect');
+      const res = await fetch('/api/detect');
+      const data = await res.json();
+      console.log('Detection complete', data);
       await fetchSignals();
     } catch (e) {
       console.error('Detection failed', e);
     } finally {
       setDetecting(false);
+    }
+  };
+
+  const startOutreach = async () => {
+    setOutreaching(true);
+    try {
+      const res = await fetch('/api/prospect-outreach', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ campaignId: 'STARTUP_GAP_V1', leadsCount: 137 })
+      });
+      const data = await res.json();
+      alert(data.campaign.message);
+    } catch (e) {
+      console.error('Outreach failed', e);
+    } finally {
+      setOutreaching(false);
     }
   };
 
@@ -89,7 +109,9 @@ function DashboardContent() {
         <div className="text-2xl font-bold tracking-tight text-slate-900">Amont</div>
         <nav className="flex flex-col gap-3">
           <a href="#" className="p-3 bg-slate-900 text-white rounded-lg font-semibold text-sm">Signaux IDF ({zip})</a>
-          <a href="#" className="p-3 text-slate-500 hover:bg-slate-50 rounded-lg font-semibold text-sm transition-colors">Mes Prospects</a>
+          <button onClick={startOutreach} disabled={outreaching} className="p-3 text-left text-slate-500 hover:bg-slate-50 rounded-lg font-semibold text-sm transition-colors">
+            {outreaching ? 'Outreach...' : 'Confronter le Marché (137)'}
+          </button>
           <a href="#" className="p-3 text-slate-500 hover:bg-slate-50 rounded-lg font-semibold text-sm transition-colors">Configuration W4</a>
           
           <div className="mt-auto pt-10 border-t border-slate-100">

@@ -4,7 +4,7 @@ import { enrichSignal } from '@/lib/enrichment';
 
 /**
  * Next.js App Router version of the detection worker
- * W1 (Detection) -> W2 (Enrichment) -> W3 (Scoring)
+ * W1 (Detection) -> W2 (Enrichment) -> W3 (Scoring) -> NOTIFY (Alert)
  */
 
 export async function GET() {
@@ -14,6 +14,14 @@ export async function GET() {
     console.log('[AMONT_WORKER] Initiating W1 -> W2 -> W3 Pipeline...');
 
     const rawSignals = await fetchRNEFlux();
+
+    // In a real scenario, we'd check Reserved_Zones to find which firm to notify
+    // For the demo, we simulate a notification for the 75015 pilot (Cabinet A)
+    const pilotFirm = {
+      name: "Cabinet Paris 15",
+      zip: "75015",
+      whatsapp: "+33600000000"
+    };
 
     const targetSignals = rawSignals.filter(signal => {
       const idfPrefixes = ['75', '77', '78', '91', '92', '93', '94', '95'];
@@ -37,14 +45,33 @@ export async function GET() {
 
       const fullRationale = `${scoreData.rationale}\n\n[W2 Enriched Signals]: ${enriched?.growth_signals?.join(', ')}\n[CA Estimate]: ${enriched?.ca}`;
 
-      processedSignals.push({
+      const leadObject = {
         ...s,
         score: scoreData.score,
         rationale: fullRationale,
         sector_group: s.naf_code.startsWith('43') ? 'BTP' : 'TECH/STARTUP',
         contact_cue: founderName,
         linkedin_link: linkedinSearch
-      });
+      };
+
+      processedSignals.push(leadObject);
+
+      // TRIGGER NOTIFICATION if score is high (>80)
+      if (scoreData.score >= 80) {
+        const basculeDate = new Date();
+        basculeDate.setDate(basculeDate.getDate() + 5);
+        
+        await fetch(`${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/api/notify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'NEW_SIGNAL_DETECTED',
+            firm_name: pilotFirm.name,
+            lead: leadObject,
+            bascule_date: basculeDate.toISOString().split('T')[0]
+          })
+        });
+      }
     }
 
     if (processedSignals.length > 0) {
@@ -112,17 +139,17 @@ async function fetchRNEFlux() {
       dirigeant_prenom: "Sarah"
     },
     { 
-      company_name: "NEO-FINANCE LAB", 
-      siren: "905633456", 
+      company_name: "STRUCTURE & BOIS", 
+      siren: "909544667", 
       creation_date: "2026-04-24", 
-      naf_code: "6419Z", 
-      postal_code: "33000", 
-      city: "Bordeaux",
-      legal_form: "SAS",
-      capital: 50000,
-      associates_count: 4,
-      dirigeant_nom: "MARTIN",
-      dirigeant_prenom: "Luc"
+      naf_code: "4332A", 
+      postal_code: "94200", 
+      city: "Ivry-sur-Seine",
+      legal_form: "SARL",
+      capital: 1000,
+      associates_count: 1,
+      dirigeant_nom: "MOREL",
+      dirigeant_prenom: "Alice"
     }
   ];
 }

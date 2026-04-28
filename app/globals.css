@@ -4,17 +4,32 @@
 
 :root {
   --primary: #1E293B;
-  --primary-light: #334155;
   --bg: #FFFFFF;
-  --border: #E2E8F0;
-  --text: #1E293B;
-  --muted: #64748B;
-  --success: #10B981;
+  --slate-50: #F8FAFC;
+  --slate-100: #F1F5F9;
+  --slate-200: #E2E8F0;
+  --slate-900: #0F172A;
+  --emerald-500: #10B981;
+}
+
+* {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--text);
+  color: var(--primary);
   background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: var(--slate-900);
+  color: white;
+}
+
+/* Custom shadow for clementine-style cards */
+.shadow-3xl {
+  box-shadow: 0 50px 100px -20px rgba(15, 23, 42, 0.12), 0 30px 60px -30px rgba(15, 23, 42, 0.15);
 }
 
 .advantage-pill {
@@ -22,26 +37,23 @@ body {
   align-items: center;
   padding: 4px 12px;
   background: rgba(16, 185, 129, 0.1);
-  color: var(--success);
+  color: var(--emerald-500);
   border-radius: 100px;
   font-size: 14px;
   font-weight: 700;
 }
 
-.worker-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--success);
-  border-radius: 50%;
-  box-shadow: 0 0 10px var(--success);
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.pulse {
-  animation: pulse 2s infinite;
+.animate-in {
+  animation: fadeIn 0.6s ease-out forwards;
 }
 
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
+/* Responsive constraints */
+@media (max-width: 640px) {
+  h1 { font-size: 2.5rem !important; }
 }
