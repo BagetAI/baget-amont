@@ -66,7 +66,7 @@ export default async function handler(req, res) {
                 externalKey: s.siren
             }));
 
-            await fetch(`https://baget.ai/api/public/databases/${DB_ID}/rows`, {
+            await fetch(`https://app.baget.ai/api/public/databases/${DB_ID}/rows`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ rows })

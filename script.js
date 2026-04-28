@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 // Fetch existing reserved zones
-                const response = await fetch(`https://baget.ai/api/public/databases/${DB_RESERVED_ZONES}/rows`);
+                const response = await fetch(`https://app.baget.ai/api/public/databases/${DB_RESERVED_ZONES}/rows`);
                 const rows = await response.json();
                 
                 const isLocked = rows.some(row => row.data.postal_code === postalCode);
@@ -87,14 +87,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 // 1. Save to Waitlist
-                const waitlistRes = await fetch(`https://baget.ai/api/public/databases/${DB_WAITLIST}/rows`, {
+                const waitlistRes = await fetch(`https://app.baget.ai/api/public/databases/${DB_WAITLIST}/rows`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(waitlistPayload)
                 });
 
                 // 2. Mark Zone as Reserved
-                const reserveRes = await fetch(`https://baget.ai/api/public/databases/${DB_RESERVED_ZONES}/rows`, {
+                const reserveRes = await fetch(`https://app.baget.ai/api/public/databases/${DB_RESERVED_ZONES}/rows`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(reservationPayload)

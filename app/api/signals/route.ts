@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   const zip = searchParams.get('zip');
 
   try {
-    const response = await fetch(`https://baget.ai/api/public/databases/${DB_SIGNALS_V2}/rows`, {
+    const response = await fetch(`https://app.baget.ai/api/public/databases/${DB_SIGNALS_V2}/rows`, {
       cache: 'no-store'
     });
     const rows = await response.json();
