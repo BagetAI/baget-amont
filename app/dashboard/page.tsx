@@ -24,6 +24,7 @@ function DashboardContent() {
   const [loading, setLoading] = useState(true);
   const [detecting, setDetecting] = useState(false);
   const [closingStatus, setClosingStatus] = useState<Record<string, string>>({});
+  const [generatedContracts, setGeneratedContracts] = useState<Record<string, string>>({});
   const [billingStatus] = useState({
     plan: 'Programme Pilote J+21',
     status: 'Actif',
@@ -64,12 +65,17 @@ function DashboardContent() {
   };
 
   const handleClosing = async (lead: Lead) => {
-    setClosingStatus(prev => ({ ...prev, [lead.id]: 'Initialisation...' }));
+    setClosingStatus(prev => ({ ...prev, [lead.id]: 'Génération Contrat...' }));
     
     try {
       const result = await initiateW4Closing(lead.id, lead.company_name, lead.contact_cue);
       if (result.success) {
-        setClosingStatus(prev => ({ ...prev, [lead.id]: 'W4 Lancé ✅' }));
+        setClosingStatus(prev => ({ ...prev, [lead.id]: 'Prêt pour Signature ✅' }));
+        if (result.contract) {
+          setGeneratedContracts(prev => ({ ...prev, [lead.id]: result.contract }));
+        }
+      } else {
+        setClosingStatus(prev => ({ ...prev, [lead.id]: 'Échec' }));
       }
     } catch (e) {
       setClosingStatus(prev => ({ ...prev, [lead.id]: 'Échec' }));
@@ -106,9 +112,9 @@ function DashboardContent() {
           <div>
             <div className="flex items-center gap-4 mb-4">
               <h1 className="text-3xl font-bold text-slate-900">Territoire {zip}</h1>
-              <div className="advantage-pill">W1-W3 Intelligence Active</div>
+              <div className="advantage-pill">W1-W4 Intelligence Active</div>
             </div>
-            <p className="text-slate-500 font-medium">Capture J+3 : Détection RNE + Enrichissement Pappers + Scoring IA.</p>
+            <p className="text-slate-500 font-medium">Capture J+3 : Détection RNE + Enrichissement Pappers + Scoring IA + Closing W4.</p>
           </div>
           <button 
             onClick={triggerDetection}
@@ -159,18 +165,27 @@ function DashboardContent() {
                     </div>
                   </div>
 
-                  <div className="mb-10">
+                  <div className="mb-6">
                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-3">Enrichissement W2 & Scoring W3</p>
                     <div className="p-6 bg-slate-50 rounded-xl text-sm text-slate-700 border-l-4 border-slate-900">
                       <p className="leading-relaxed whitespace-pre-line">{lead.rationale}</p>
                     </div>
                   </div>
 
+                  {generatedContracts[lead.id] && (
+                    <div className="mb-10">
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-3 text-emerald-600">Projet de Lettre de Mission (Généré par W4)</p>
+                      <div className="p-8 bg-emerald-50 rounded-xl text-xs text-slate-800 border-2 border-emerald-100 font-serif overflow-auto max-h-96 leading-relaxed shadow-inner">
+                        <div className="whitespace-pre-line">{generatedContracts[lead.id]}</div>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex flex-wrap gap-4">
                     <button 
                       onClick={() => handleClosing(lead)}
-                      disabled={!!closingStatus[lead.id]}
-                      className="flex-1 lg:flex-none px-8 py-4 bg-slate-900 text-white rounded-xl font-bold text-sm hover:translate-y-[-2px] active:translate-y-0 disabled:bg-slate-200 transition-all shadow-lg shadow-slate-100"
+                      disabled={!!closingStatus[lead.id] && closingStatus[lead.id].includes('✅')}
+                      className={`flex-1 lg:flex-none px-8 py-4 rounded-xl font-bold text-sm transition-all shadow-lg shadow-slate-100 ${closingStatus[lead.id]?.includes('✅') ? 'bg-emerald-600 text-white cursor-default' : 'bg-slate-900 text-white hover:translate-y-[-2px] active:translate-y-0'}`}
                     >
                       {closingStatus[lead.id] || 'Lancer Closing W4'}
                     </button>
@@ -211,9 +226,9 @@ function DashboardContent() {
             <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
             <span className="text-xs font-bold text-slate-300 uppercase">W3_SCORING : LLM ACTIVE</span>
           </div>
-          <div className="flex items-center gap-4 opacity-30">
-            <div className="w-1.5 h-1.5 bg-slate-600 rounded-full"></div>
-            <span className="text-xs font-bold text-slate-600 uppercase">W4_CLOSING : READY</span>
+          <div className="flex items-center gap-4">
+            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+            <span className="text-xs font-bold text-slate-300 uppercase">W4_CLOSING : CONTRACT GEN</span>
           </div>
         </div>
       </div>

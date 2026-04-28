@@ -3,15 +3,30 @@
 export async function initiateW4Closing(leadId: string, companyName: string, contactCue: string) {
   console.log(`[W4_SERVER_ACTION] Triggered for ${companyName} (${leadId})`);
   
-  // Logic to interact with external W4 worker (simulated)
-  // 1. CRM Update
-  // 2. Email drafting
-  // 3. Mission letter generation
-  
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  try {
+    // 1. Generate the Contract
+    const res = await fetch(`${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/api/generate-contract`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prospect_id: leadId })
+    });
+    
+    const data = await res.json();
 
-  return {
-    success: true,
-    message: `La séquence W4 a été initiée avec succès pour ${companyName}. Le projet de lettre de mission est prêt pour ${contactCue}.`
-  };
+    if (data.success) {
+      return {
+        success: true,
+        message: `W4 Lancé. Contrat généré : ${data.filename}`,
+        contract: data.contract_content
+      };
+    } else {
+      throw new Error(data.error || 'Failed to generate contract');
+    }
+  } catch (error) {
+    console.error('[W4_ACTION_ERROR]', error);
+    return {
+      success: false,
+      message: "Erreur lors de la génération du contrat W4."
+    };
+  }
 }
