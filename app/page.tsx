@@ -57,7 +57,6 @@ export default function LandingPage() {
         body: JSON.stringify({ data })
       });
       
-      // Also lock the zone
       await fetch('https://app.baget.ai/api/public/databases/ef968f67-d829-4476-8897-766ebed7fd00/rows', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -80,178 +79,194 @@ export default function LandingPage() {
   };
 
   return (
-    <div className={`min-h-screen bg-white text-slate-900 ${plusJakarta.className}`}>
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    <div className={`min-h-screen bg-[#F8FAFC] text-slate-900 ${plusJakarta.className} selection:bg-slate-900 selection:text-white`}>
+      {/* Navigation: Clementine Style - High White, Floating */}
+      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl">
+        <div className="bg-white/80 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-full px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white font-black text-xs">A</div>
-            <span className="text-xl font-bold tracking-tight">Amont</span>
+            <div className="w-7 h-7 bg-slate-900 rounded-lg flex items-center justify-center text-white font-black text-[10px]">A</div>
+            <span className="text-lg font-bold tracking-tight text-slate-900">Amont</span>
           </div>
-          <div className="hidden md:flex items-center gap-10">
-            <a href="#vision" className="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">Vision</a>
-            <a href="#fonctionnement" className="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">Fonctionnement</a>
-            <a href="/dashboard" className="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">Dashboard Pilote</a>
-            <a href="#checker" className="px-6 py-3 bg-slate-900 text-white rounded-full text-sm font-bold hover:bg-slate-800 transition-all shadow-xl shadow-slate-200">
-              Vérifier mon secteur
-            </a>
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#vision" className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-widest">Le Gap J+3</a>
+            <a href="#fonctionnement" className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-widest">Workers</a>
+            <a href="/dashboard" className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-widest">Dashboard</a>
           </div>
+          <a href="#checker" className="px-5 py-2.5 bg-slate-900 text-white rounded-full text-xs font-bold hover:bg-slate-800 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-slate-200">
+            Vérifier ma zone
+          </a>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-32 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
+      {/* Hero: Inspiration Clementine.fr - Airy, Premium visual */}
+      <section className="relative pt-44 pb-32">
+        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-24 items-center">
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-full text-emerald-700 text-xs font-bold mb-8">
-              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-              J+3 Signal Advantage
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white border border-slate-100 rounded-full text-slate-900 text-[10px] font-black uppercase tracking-widest mb-10 shadow-sm">
+              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+              Exclusivité J+3 Active
             </div>
-            <h1 className="text-6xl md:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.1] mb-8">
-              Signez vos clients <span className="text-slate-400">avant</span> la concurrence.
+            <h1 className="text-6xl md:text-8xl font-black tracking-tight text-slate-900 leading-[0.95] mb-10">
+              Devancez <br/><span className="text-slate-300">le marché.</span>
             </h1>
-            <p className="text-xl text-slate-500 font-medium leading-relaxed mb-12 max-w-xl">
-              Ne perdez plus 2 mois à attendre les alertes BODACC. Amont capture l'intention dès le dépôt des statuts. Un avantage temporel de 57 jours pour votre cabinet.
+            <p className="text-xl text-slate-500 font-medium leading-relaxed mb-14 max-w-lg">
+              Amont capture les signaux de création 57 jours avant vos concurrents. Un collaborateur IA pour verrouiller vos mandats au moment le plus critique.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <a href="#checker" className="px-10 py-5 bg-slate-900 text-white rounded-full text-lg font-bold hover:bg-slate-800 transition-all text-center shadow-2xl shadow-slate-300">
-                Réserver ma zone exclusive
+            <div className="flex flex-col sm:flex-row gap-6">
+              <a href="#checker" className="px-12 py-6 bg-slate-900 text-white rounded-full text-lg font-bold hover:bg-slate-800 transition-all text-center shadow-[0_20px_40px_rgba(15,23,42,0.2)]">
+                Vérifier ma disponibilité
               </a>
-              <div className="flex items-center gap-4 px-8 py-5 text-slate-400 font-semibold italic">
-                Déjà 3 cabinets pilotes en IDF
+              <div className="flex items-center gap-4 px-6 py-5 text-slate-400 font-bold text-sm tracking-tight italic">
+                Déjà 3 pilotes en production.
               </div>
             </div>
           </div>
-          <div className="relative">
-            <div className="absolute inset-0 bg-emerald-100/50 rounded-[4rem] rotate-3 -z-10"></div>
+          <div className="relative lg:h-[700px]">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-white rounded-full blur-[120px] -z-10 opacity-60"></div>
             <img 
-              src="images/a-professional-and-modern-hero-image-for.png" 
-              alt="Professional Accounting Workspace" 
-              className="rounded-[3rem] shadow-3xl object-cover aspect-[4/5] lg:aspect-auto"
+              src="images/high-end-minimalist-website-hero-section.png" 
+              alt="Amont Intelligence Hub" 
+              className="w-full h-full object-cover rounded-[4rem] shadow-[0_40px_100px_rgba(0,0,0,0.08)] border-4 border-white"
             />
           </div>
         </div>
       </section>
 
-      {/* Trust Bar */}
-      <section className="py-12 border-y border-slate-50 bg-slate-50/50">
-        <div className="max-w-7xl mx-auto px-6 flex flex-wrap justify-center items-center gap-12 md:gap-24 grayscale opacity-40">
-           <span className="text-2xl font-black italic tracking-tighter">CABINET_PILOTE_1</span>
-           <span className="text-2xl font-black italic tracking-tighter">PARIS_8_ASSOCIÉS</span>
-           <span className="text-2xl font-black italic tracking-tighter">BOULOGNE_GROWTH</span>
-           <span className="text-2xl font-black italic tracking-tighter">IDF_ACCOUNTING</span>
-        </div>
-      </section>
-
-      {/* Vision: The J+3 Gap */}
-      <section id="vision" className="py-32">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-24">
-            <h2 className="text-4xl font-black tracking-tight mb-6">Le gap temporel : votre levier de croissance</h2>
-            <p className="text-slate-500 text-lg font-medium">À J+60, le fondateur a déjà choisi son expert-comptable. À J+3, il cherche encore son partenaire.</p>
+      {/* Stats: Clementine Style Trust Bar */}
+      <section className="py-20 bg-white border-y border-slate-100">
+        <div className="max-w-7xl mx-auto px-6 flex flex-wrap justify-between items-center gap-10">
+          <div className="flex flex-col gap-1">
+            <span className="text-4xl font-black text-slate-900 tracking-tighter">J+3</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Vitesse Détection</span>
           </div>
-
-          <div className="space-y-12">
-            <div className="relative p-10 bg-white border border-slate-100 rounded-3xl shadow-sm hover:shadow-xl transition-all group overflow-hidden">
-               <div className="absolute top-0 left-0 w-2 h-full bg-slate-900"></div>
-               <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-                  <div className="flex-1">
-                    <span className="text-sm font-black text-slate-900 uppercase tracking-widest mb-4 block">Amont Signal</span>
-                    <h3 className="text-3xl font-bold mb-4">Détection J+3 (Pré-Kbis)</h3>
-                    <p className="text-slate-500 leading-relaxed font-medium">Capture de l'intention dès le dépôt RNE. Vous contactez le client au moment de l'ouverture du compte bancaire.</p>
-                  </div>
-                  <div className="w-full md:w-64 bg-slate-50 h-4 rounded-full overflow-hidden">
-                    <div className="w-1/12 h-full bg-slate-900"></div>
-                  </div>
-               </div>
-            </div>
-
-            <div className="relative p-10 bg-white border border-slate-100 rounded-3xl shadow-sm opacity-50 overflow-hidden">
-               <div className="absolute top-0 left-0 w-2 h-full bg-slate-200"></div>
-               <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-                  <div className="flex-1">
-                    <span className="text-sm font-black text-slate-300 uppercase tracking-widest mb-4 block">Standard Marché</span>
-                    <h3 className="text-3xl font-bold text-slate-300">Alerte BODACC J+60</h3>
-                    <p className="text-slate-300 leading-relaxed font-medium">Publication légale tardive. Le dossier est déjà signé par un concurrent réactif.</p>
-                  </div>
-                  <div className="w-full md:w-64 bg-slate-50 h-4 rounded-full overflow-hidden">
-                    <div className="w-full h-full bg-slate-200"></div>
-                  </div>
-               </div>
-            </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-4xl font-black text-slate-900 tracking-tighter">57j</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Avance Concurrentielle</span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-4xl font-black text-slate-900 tracking-tighter">100%</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Exclusivité Géo</span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-4xl font-black text-slate-900 tracking-tighter">897€</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Valeur Mensuelle</span>
           </div>
         </div>
       </section>
 
-      {/* The Checker: Real-time Exclusivity */}
-      <section id="checker" className="py-32 bg-slate-950 text-white rounded-[4rem] mx-4 my-8">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-5xl font-black tracking-tight mb-8">Vérifiez votre secteur.</h2>
-          <p className="text-slate-400 text-lg font-medium mb-12 max-w-2xl mx-auto">
-            Nous limitons l'accès à un seul cabinet par zone géographique pour garantir l'efficacité des leads. Ne laissez pas un concurrent verrouiller votre code postal.
-          </p>
-
-          <div className="bg-white/5 p-4 rounded-full flex flex-col md:flex-row gap-4 mb-12">
-            <input 
-              type="text" 
-              value={postalCode}
-              onChange={(e) => setPostalCode(e.target.value)}
-              placeholder="Entrez votre code postal (ex: 75008)" 
-              className="flex-1 bg-transparent border-none text-white text-xl font-bold px-8 py-4 focus:ring-0 placeholder:text-slate-600"
-            />
-            <button 
-              onClick={checkExclusivity}
-              className="px-10 py-5 bg-white text-slate-900 rounded-full font-bold text-lg hover:bg-slate-100 transition-all"
-            >
-              Vérifier la disponibilité
-            </button>
+      {/* Vision & Logic: High Spacing, Clean Typography */}
+      <section id="vision" className="py-44 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-32">
+            <span className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mb-6 block">Le Moment de Vérité</span>
+            <h2 className="text-5xl font-black tracking-tight mb-8">Pourquoi attendre J+60 ?</h2>
+            <p className="text-xl text-slate-500 font-medium leading-relaxed">
+              Le fondateur choisit son expert-comptable dans les 7 jours suivant le dépôt de ses statuts. Amont vous place dans cette fenêtre critique, pendant que les autres attendent le Kbis.
+            </p>
           </div>
 
-          {checkResult.message && (
-            <div className={`mb-12 p-6 rounded-2xl font-bold text-center animate-in fade-in slide-in-from-top-4 ${checkResult.status === 'available' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
-              {checkResult.message}
-            </div>
-          )}
-
-          {showForm && !isSuccess && (
-            <form onSubmit={handleWaitlistSubmit} className="bg-white p-10 rounded-[3rem] text-slate-900 text-left max-w-lg mx-auto shadow-2xl">
-              <h3 className="text-2xl font-black mb-8 text-center">Verrouiller mon territoire</h3>
-              <div className="space-y-4">
-                <input name="name" placeholder="Votre nom complet" className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-xl font-semibold" required />
-                <input name="firm_name" placeholder="Nom de votre cabinet" className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-xl font-semibold" required />
-                <input name="email" type="email" placeholder="Email professionnel" className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-xl font-semibold" required />
-                <button 
-                  disabled={isSubmitting}
-                  className="w-full py-5 bg-slate-900 text-white rounded-xl font-black text-lg hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 mt-6"
-                >
-                  {isSubmitting ? 'Verrouillage en cours...' : 'Accéder au Pilotage J+21'}
-                </button>
+          <div className="grid gap-12">
+            <div className="p-12 bg-[#F8FAFC] rounded-[3rem] border border-slate-50 flex flex-col md:flex-row items-center gap-12 group transition-all hover:scale-[1.02]">
+              <div className="w-20 h-20 bg-slate-900 rounded-3xl flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-slate-200">A</div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold mb-4 text-slate-900">Signaux Amont (J+3)</h3>
+                <p className="text-slate-500 font-medium">Détection dès le dépôt RNE. Profilage immédiat. Prise de contact avant toute sollicitation externe.</p>
               </div>
-            </form>
-          )}
-
-          {isSuccess && (
-            <div className="p-12 bg-emerald-500 text-white rounded-[3rem] text-center max-w-lg mx-auto">
-               <h3 className="text-3xl font-black mb-4">Secteur Verrouillé ✅</h3>
-               <p className="text-emerald-100 font-medium mb-8">Félicitations. Le secteur {postalCode} vous est réservé en exclusivité. Daniel Lahyani vous contactera pour activer vos signaux.</p>
-               <a href={`/dashboard?zip=${postalCode}`} className="inline-block px-10 py-5 bg-white text-slate-900 rounded-full font-black text-lg">Accéder au Dashboard</a>
             </div>
-          )}
+            
+            <div className="p-12 bg-white rounded-[3rem] border border-slate-100 flex flex-col md:flex-row items-center gap-12 opacity-50">
+              <div className="w-20 h-20 bg-slate-100 rounded-3xl flex items-center justify-center text-slate-400 text-3xl font-black">B</div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold mb-4 text-slate-300">Alerte Marché (J+60)</h3>
+                <p className="text-slate-300 font-medium">Publication BODACC. Le fondateur est déjà accompagné ou saturé de spam publicitaire.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Functionality: One message per screen style logic */}
-      <section id="fonctionnement" className="py-32">
+      {/* The Checker: Interactive, High Stakes */}
+      <section id="checker" className="py-44">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="bg-slate-900 rounded-[4rem] p-16 lg:p-24 text-center text-white shadow-[0_50px_100px_rgba(15,23,42,0.3)]">
+            <h2 className="text-5xl lg:text-7xl font-black tracking-tight mb-12">Verrouillez votre zone.</h2>
+            <p className="text-xl text-slate-400 font-medium mb-16 max-w-2xl mx-auto">
+              Un seul cabinet par secteur. Vérifiez si votre code postal est disponible et protégez votre territoire de croissance.
+            </p>
+
+            <div className="bg-white/10 p-3 rounded-full flex flex-col sm:flex-row gap-3 mb-12 max-w-2xl mx-auto backdrop-blur-md">
+              <input 
+                type="text" 
+                value={postalCode}
+                onChange={(e) => setPostalCode(e.target.value)}
+                placeholder="Code postal (ex: 69002)" 
+                className="flex-1 bg-transparent border-none text-white text-2xl font-bold px-8 py-5 focus:ring-0 placeholder:text-slate-600"
+              />
+              <button 
+                onClick={checkExclusivity}
+                className="px-12 py-5 bg-white text-slate-900 rounded-full font-bold text-xl hover:bg-slate-100 transition-all hover:scale-105"
+              >
+                Vérifier
+              </button>
+            </div>
+
+            {checkResult.message && (
+              <div className={`mb-16 p-8 rounded-3xl font-black text-lg animate-in fade-in slide-in-from-top-4 ${checkResult.status === 'available' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
+                {checkResult.message}
+              </div>
+            )}
+
+            {showForm && !isSuccess && (
+              <form onSubmit={handleWaitlistSubmit} className="bg-white p-12 lg:p-16 rounded-[4rem] text-slate-900 text-left max-w-xl mx-auto shadow-2xl animate-in fade-in">
+                <h3 className="text-3xl font-black mb-10 text-center">Formulaire de Réservation</h3>
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Informations Associé</label>
+                    <input name="name" placeholder="Nom Prénom" className="w-full px-8 py-5 bg-slate-50 border border-slate-100 rounded-2xl font-bold placeholder:text-slate-300" required />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Le Cabinet</label>
+                    <input name="firm_name" placeholder="Dénomination du Cabinet" className="w-full px-8 py-5 bg-slate-50 border border-slate-100 rounded-2xl font-bold placeholder:text-slate-300" required />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Contact Direct</label>
+                    <input name="email" type="email" placeholder="Email professionnel" className="w-full px-8 py-5 bg-slate-50 border border-slate-100 rounded-2xl font-bold placeholder:text-slate-300" required />
+                  </div>
+                  <button 
+                    disabled={isSubmitting}
+                    className="w-full py-6 bg-slate-900 text-white rounded-2xl font-black text-xl hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 mt-10 hover:scale-[1.02]"
+                  >
+                    {isSubmitting ? 'Verrouillage...' : 'Activer mon exclusivité'}
+                  </button>
+                  <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-6">Accès Pilote J+21 Sans Engagement</p>
+                </div>
+              </form>
+            )}
+
+            {isSuccess && (
+              <div className="p-16 bg-emerald-600 text-white rounded-[4rem] text-center max-w-xl mx-auto shadow-2xl">
+                 <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-8 text-4xl">✅</div>
+                 <h3 className="text-4xl font-black mb-6">Territoire Verrouillé</h3>
+                 <p className="text-emerald-100 text-lg font-medium mb-12">Le secteur {postalCode} est désormais sous votre contrôle exclusif. Vos premiers signaux arrivent dans quelques minutes.</p>
+                 <a href={`/dashboard?zip=${postalCode}`} className="inline-block px-12 py-6 bg-white text-slate-900 rounded-full font-black text-xl hover:scale-105 transition-all">Accéder à mon Dashboard</a>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Workers: Functional Authority */}
+      <section id="fonctionnement" className="py-44 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-4 gap-12">
             {[
-              { id: 'W1', title: 'Détection', desc: 'Surveillance temps réel du flux INPI/RNE.' },
-              { id: 'W2', title: 'Enrichissement', desc: 'Collecte des signaux de CA et profils dirigeants.' },
-              { id: 'W3', title: 'Scoring', desc: 'Algorithme prédictif de propension closing.' },
-              { id: 'W4', title: 'Closing', desc: 'Génération automatisée des lettres de mission.' },
+              { id: 'W1', title: 'Détection RNE', desc: 'Capture quotidienne du flux Guichet Unique.' },
+              { id: 'W2', title: 'Intelligence', desc: 'Enrichissement Pappers et signaux de croissance.' },
+              { id: 'W3', title: 'Priorisation', desc: 'Score IA de propension closing 0-100.' },
+              { id: 'W4', title: 'Action W4', desc: 'Génération automatique de la lettre de mission.' },
             ].map((worker) => (
-              <div key={worker.id} className="p-10 bg-white border border-slate-100 rounded-[2.5rem] hover:border-slate-900 transition-all group">
-                <div className="text-5xl font-black text-slate-100 group-hover:text-slate-900 transition-colors mb-6">{worker.id}</div>
+              <div key={worker.id} className="p-12 bg-white rounded-[3rem] border border-slate-50 shadow-sm hover:shadow-2xl transition-all hover:-translate-y-2">
+                <div className="text-6xl font-black text-slate-900 mb-8">{worker.id}</div>
                 <h3 className="text-xl font-black mb-4">{worker.title}</h3>
                 <p className="text-slate-500 font-medium leading-relaxed">{worker.desc}</p>
               </div>
@@ -260,25 +275,28 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-32 text-center">
-        <h2 className="text-5xl font-black tracking-tight mb-8">Reprenez l'avantage.</h2>
-        <p className="text-slate-500 text-lg font-medium mb-12">Le temps est votre actif le plus précieux. Ne le gaspillez plus.</p>
-        <a href="#checker" className="px-12 py-6 bg-slate-900 text-white rounded-full text-xl font-black hover:bg-slate-800 transition-all shadow-2xl shadow-slate-200">
-          Rejoindre le programme pilote
-        </a>
-      </section>
-
-      <footer className="py-20 border-t border-slate-50">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white font-black text-xs">A</div>
-            <span className="text-xl font-bold tracking-tight">Amont</span>
+      <footer className="py-32 bg-white border-t border-slate-50">
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-20">
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white font-black text-xs">A</div>
+              <span className="text-xl font-bold tracking-tight">Amont</span>
+            </div>
+            <p className="text-slate-400 font-medium leading-relaxed">Intelligence temps réel pour cabinets d'expertise comptable tournés vers la croissance.</p>
           </div>
-          <p className="text-slate-400 text-sm font-medium">&copy; 2026 Amont. Signal Intelligence for Accountants.</p>
-          <div className="flex gap-8">
-            <a href="#" className="text-sm font-bold text-slate-400 hover:text-slate-900">Mentions</a>
-            <a href="#" className="text-sm font-bold text-slate-400 hover:text-slate-900">Contact</a>
+          <div className="flex flex-col gap-6">
+            <span className="text-xs font-black uppercase tracking-widest text-slate-900">Plateforme</span>
+            <div className="flex flex-col gap-3">
+              <a href="/dashboard" className="text-slate-500 font-medium hover:text-slate-900">Dashboard Pilote</a>
+              <a href="#checker" className="text-slate-500 font-medium hover:text-slate-900">Vérificateur Exclusivité</a>
+            </div>
+          </div>
+          <div className="flex flex-col gap-6">
+            <span className="text-xs font-black uppercase tracking-widest text-slate-900">Légal</span>
+            <div className="flex flex-col gap-3">
+              <span className="text-slate-500 font-medium">&copy; 2026 Amont. Tous droits réservés.</span>
+              <a href="#" className="text-slate-500 font-medium hover:text-slate-900">RGPD & Cookies</a>
+            </div>
           </div>
         </div>
       </footer>
