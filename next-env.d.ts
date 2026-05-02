@@ -1,4 +1,4 @@
 /// <reference types="next" />
-/// <reference types="next/navigation-types/navigation" />
+/// <reference types="next/navigation" />
 
-// ./next-env.d.ts
+// see https://nextjs.org/docs/app/building-your-application/configuring/typescript for more information.

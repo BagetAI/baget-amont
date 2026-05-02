@@ -4,56 +4,60 @@
 
 :root {
   --primary: #1E293B;
-  --bg: #FFFFFF;
-  --slate-50: #F8FAFC;
-  --slate-100: #F1F5F9;
-  --slate-200: #E2E8F0;
-  --slate-900: #0F172A;
-  --emerald-500: #10B981;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F8FAFC;
+  --accent: #10B981;
+  --muted: #64748B;
+  --border: #E2E8F0;
+  --background: #FFFFFF;
+}
+
+body {
+  color: var(--primary);
+  background: var(--background);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "ss01", "ss02", "cv01", "cv02";
 }
 
 * {
   scroll-behavior: smooth;
 }
 
-body {
-  color: var(--primary);
-  background: var(--bg);
-  -webkit-font-smoothing: antialiased;
+/* Clementine/Tengo Style Shadows */
+.shadow-premium {
+  box-shadow: 0 50px 100px -20px rgba(15, 23, 42, 0.08), 0 30px 60px -30px rgba(15, 23, 42, 0.1);
 }
 
-::selection {
-  background-color: var(--slate-900);
-  color: white;
-}
-
-/* Custom shadow for clementine-style cards */
-.shadow-3xl {
-  box-shadow: 0 50px 100px -20px rgba(15, 23, 42, 0.12), 0 30px 60px -30px rgba(15, 23, 42, 0.15);
-}
-
-.advantage-pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  background: rgba(16, 185, 129, 0.1);
-  color: var(--emerald-500);
-  border-radius: 100px;
-  font-size: 14px;
-  font-weight: 700;
+.shadow-card {
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03), 0 1px 3px rgba(15, 23, 42, 0.05);
 }
 
 /* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-in {
-  animation: fadeIn 0.6s ease-out forwards;
+.animate-slide-up {
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Responsive constraints */
-@media (max-width: 640px) {
-  h1 { font-size: 2.5rem !important; }
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Charts */
+.comparison-bar {
+  transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
