@@ -9,316 +9,170 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
-        .shadow-premium { box-shadow: 0 50px 100px -20px rgba(15, 23, 42, 0.08), 0 30px 60px -30px rgba(15, 23, 42, 0.1); }
-        .shadow-card { box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03), 0 1px 3px rgba(15, 23, 42, 0.05); }
-        .animate-slide-up { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .comparison-bar { transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
-        .glass-nav { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            -webkit-font-smoothing: antialiased; 
+            color: #1e293b;
+            background: #ffffff;
+        }
+        .glass-nav { 
+            background: rgba(255, 255, 255, 0.8); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px); 
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .shadow-premium { 
+            box-shadow: 0 50px 100px -20px rgba(15, 23, 42, 0.08), 0 30px 60px -30px rgba(15, 23, 42, 0.1); 
+        }
+        .animate-slide-up { 
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+        }
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        .gap-chart-bar {
+            transition: width 2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-primary {
+            background: #1e293b;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: #0f172a;
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px -10px rgba(30, 41, 59, 0.3);
+        }
+        .hidden { display: none; }
         html { scroll-behavior: smooth; }
     </style>
 </head>
-<body class="bg-white text-slate-900">
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-slate-100 h-20">
+<body>
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-nav h-20">
         <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white font-bold text-sm">A</div>
-                <span class="text-xl font-bold tracking-tight">Amont</span>
+                <div class="w-9 h-9 bg-[#1e293b] rounded-xl flex items-center justify-center text-white font-extrabold text-sm">A</div>
+                <span class="text-xl font-extrabold tracking-tight">Amont</span>
             </div>
             <div class="hidden md:flex items-center gap-10">
-                <a href="#performance" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">Performance</a>
-                <a href="#demo" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">Démo</a>
-                <a href="#contact" class="px-6 py-2.5 bg-slate-900 text-white rounded-full text-sm font-bold hover:bg-slate-800 transition-all">Contacter un expert</a>
+                <a href="#methode" class="text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors">La Méthode</a>
+                <a href="#demo" class="text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors">Démo Live</a>
+                <a href="#tarifs" class="text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors">Tarifs</a>
+                <a href="#checker" class="px-7 py-3 bg-[#1e293b] text-white rounded-full text-sm font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-200">Vérifier mon territoire</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero -->
-    <section class="pt-40 pb-24 md:pt-56 md:pb-40">
-        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
-            <div class="animate-slide-up">
-                <div class="inline-flex items-center gap-2 px-3 py-1 bg-slate-50 border border-slate-100 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-500 mb-8">
-                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                    Détection J+3 Pre-Registry
-                </div>
-                <h1 class="text-6xl md:text-8xl font-bold tracking-tight leading-[0.95] mb-10 text-slate-900">
-                    Capturer l'amont <br/><span class="text-slate-300">du marché.</span>
-                </h1>
-                <p class="text-xl md:text-2xl text-slate-500 font-medium leading-relaxed mb-12 max-w-xl">
-                    Gagnez 57 jours d'avance sur vos concurrents. Amont détecte les intentions de création dès le dépôt des statuts.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-5">
-                    <a href="#contact" class="px-10 py-5 bg-slate-900 text-white rounded-full text-lg font-bold hover:bg-slate-800 transition-all text-center shadow-xl shadow-slate-200">
-                        Planifier une démo
-                    </a>
-                    <a href="#performance" class="px-10 py-5 border-2 border-slate-100 text-slate-900 rounded-full text-lg font-bold hover:bg-slate-50 transition-all text-center">
-                        Voir la performance
-                    </a>
-                </div>
-            </div>
-            <div class="relative animate-slide-up" style="animation-delay: 0.2s">
-                <div class="aspect-[4/3] rounded-[3rem] overflow-hidden shadow-premium">
-                    <img src="images/high-fidelity-editorial-hero-image-for-a.png" alt="Amont Premium Business Intelligence" class="w-full h-full object-cover">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Performance Comparison -->
-    <section id="performance" class="py-32 bg-slate-50">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="text-center mb-20">
-                <h2 class="text-4xl font-bold tracking-tight mb-6">Le Gap Temporel</h2>
-                <p class="text-lg text-slate-500 font-medium">Les meilleurs clients choisissent leur expert-comptable avant même d'avoir leur Kbis.</p>
-            </div>
-            
-            <div class="space-y-12">
-                <div class="relative p-10 bg-white rounded-3xl shadow-card border border-slate-100">
-                    <div class="flex justify-between items-end mb-4">
-                        <span class="text-lg font-bold">Amont J+3</span>
-                        <span class="text-emerald-500 font-bold">Lancement des travaux</span>
-                    </div>
-                    <div class="w-full bg-slate-100 h-6 rounded-full overflow-hidden">
-                        <div class="h-full bg-emerald-500 w-[5%] comparison-bar"></div>
-                    </div>
-                    <p class="mt-6 text-sm text-slate-500 font-medium">Détection dès le dépôt du capital et rédaction des statuts.</p>
-                </div>
-
-                <div class="relative p-10 bg-white rounded-3xl shadow-card border border-slate-100 opacity-60">
-                    <div class="flex justify-between items-end mb-4">
-                        <span class="text-lg font-bold text-slate-400">Industrie J+60</span>
-                        <span class="text-slate-400 font-bold">Alerte BODACC</span>
-                    </div>
-                    <div class="w-full bg-slate-100 h-6 rounded-full overflow-hidden">
-                        <div class="h-full bg-slate-300 w-full comparison-bar"></div>
-                    </div>
-                    <p class="mt-6 text-sm text-slate-400 font-medium">Le fondateur est déjà accompagné ou saturé de prospection agressive.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Demo Dashboard -->
-    <section id="demo" class="py-40">
+    <section class="pt-48 pb-32 md:pt-64 md:pb-48 overflow-hidden">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-end gap-8 mb-20">
-                <div class="max-w-2xl">
-                    <h2 class="text-5xl font-bold tracking-tight mb-6">Détection Live.</h2>
-                    <p class="text-xl text-slate-500 font-medium">Visualisez les opportunités qualifiées en temps réel sur votre territoire.</p>
+            <div class="max-w-4xl animate-slide-up">
+                <div class="inline-flex items-center gap-3 px-4 py-1.5 bg-slate-50 border border-slate-100 rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-10">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                    Technologie de Détection J+3 Pre-Kbis
                 </div>
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-full border border-emerald-100">
-                        <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                        <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">IA Active</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-premium">
-                <div class="grid lg:grid-cols-4 min-h-[600px]">
-                    <!-- Sidebar Mockup -->
-                    <div class="bg-slate-50 p-10 border-r border-slate-200 hidden lg:block">
-                        <div class="space-y-8">
-                            <div>
-                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Filtres</p>
-                                <div class="space-y-4">
-                                    <div class="flex items-center justify-between text-sm font-bold">
-                                        <span>Île-de-France</span>
-                                        <span class="text-xs text-slate-400">12</span>
-                                    </div>
-                                    <div class="flex items-center justify-between text-sm font-bold opacity-50">
-                                        <span>Bordeaux</span>
-                                        <span class="text-xs text-slate-400">4</span>
-                                    </div>
-                                    <div class="flex items-center justify-between text-sm font-bold opacity-50">
-                                        <span>Lyon</span>
-                                        <span class="text-xs text-slate-400">8</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Verticales</p>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="px-3 py-1 bg-slate-900 text-white text-[10px] font-bold rounded-full">BTP</span>
-                                    <span class="px-3 py-1 bg-white border border-slate-200 text-slate-900 text-[10px] font-bold rounded-full">TECH</span>
-                                    <span class="px-3 py-1 bg-white border border-slate-200 text-slate-900 text-[10px] font-bold rounded-full">SANTÉ</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Lead Feed Mockup -->
-                    <div id="leadsContainer" class="lg:col-span-3 p-8 md:p-12 overflow-y-auto max-h-[800px]">
-                        <div class="flex flex-col gap-8">
-                            <div class="h-40 bg-slate-50 animate-pulse rounded-3xl"></div>
-                            <div class="h-40 bg-slate-50 animate-pulse rounded-3xl"></div>
-                            <div class="h-40 bg-slate-50 animate-pulse rounded-3xl"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact" class="py-40 bg-slate-900 text-white">
-        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-24 items-center">
-            <div>
-                <h2 class="text-6xl font-bold tracking-tight mb-10 leading-[1.1]">Prenez de <br><span class="text-slate-500">l'avance.</span></h2>
-                <p class="text-xl text-slate-400 font-medium leading-relaxed mb-12 max-w-lg">
-                    Nos experts vous accompagnent dans le déploiement de la détection Amont sur votre territoire.
+                <h1 class="text-6xl md:text-9xl font-extrabold tracking-tight leading-[0.9] mb-12">
+                    Signez vos clients <br/>
+                    <span class="text-slate-300">avant la concurrence.</span>
+                </h1>
+                <p class="text-xl md:text-3xl text-slate-500 font-medium leading-relaxed mb-16 max-w-2xl">
+                    Détectez les immatriculations à J+3, quand le fondateur cherche encore sa banque. Gagnez 57 jours d'avance sur le BODACC.
                 </p>
-                <div class="space-y-8">
-                    <div class="flex gap-6">
-                        <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center shrink-0">
-                            <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-lg mb-1">Exclusivité territoriale</h4>
-                            <p class="text-slate-500 text-sm">Nous protégeons votre zone pour garantir la qualité de vos leads.</p>
-                        </div>
+                
+                <div id="checker" class="w-full max-w-2xl scroll-mt-32">
+                    <div id="checkerContainer">
+                        <form id="zipForm" class="flex flex-col sm:flex-row gap-4">
+                            <input type="text" id="zipInput" placeholder="Code Postal (ex: 75008)" class="flex-1 px-8 py-5 bg-white border border-slate-200 rounded-full font-bold text-lg focus:outline-none focus:ring-4 focus:ring-slate-50 transition-all" required />
+                            <button type="submit" id="checkBtn" class="btn-primary px-10 py-5 rounded-full font-bold text-lg min-w-[240px]">Vérifier ma zone</button>
+                        </form>
                     </div>
-                    <div class="flex gap-6">
-                        <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center shrink-0">
-                            <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-lg mb-1">Automatisation W4</h4>
-                            <p class="text-slate-500 text-sm">Une force de frappe IA qui prépare le closing en autonomie.</p>
-                        </div>
+                    <div id="statusMessage" class="hidden mt-6 p-6 bg-slate-900 text-white rounded-[2rem] animate-slide-up flex items-center gap-4">
+                        <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center shrink-0"><span class="text-xl" id="statusIcon">📍</span></div>
+                        <p class="font-bold text-sm leading-relaxed" id="statusText"></p>
+                    </div>
+                    <div id="reservationForm" class="hidden mt-6 animate-slide-up bg-slate-50 p-8 rounded-[2rem] border border-slate-100 shadow-inner space-y-4">
+                        <p class="text-emerald-600 font-bold mb-6 flex items-center gap-2"><span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>Zone disponible.</p>
+                        <form id="leadForm" class="space-y-4">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <input type="text" name="name" placeholder="Nom" required class="px-6 py-4 bg-white border border-slate-100 rounded-2xl font-semibold text-sm">
+                                <input type="text" name="firm" placeholder="Cabinet" required class="px-6 py-4 bg-white border border-slate-100 rounded-2xl font-semibold text-sm">
+                            </div>
+                            <input type="email" name="email" placeholder="Email professionnel" required class="w-full px-6 py-4 bg-white border border-slate-100 rounded-2xl font-semibold text-sm">
+                            <button type="submit" id="reserveBtn" class="w-full py-5 bg-emerald-600 text-white rounded-2xl font-bold text-lg hover:bg-emerald-700 transition-all">Verrouiller mon secteur</button>
+                        </form>
                     </div>
                 </div>
-            </div>
 
-            <div class="bg-white p-10 md:p-16 rounded-[3rem] text-slate-900 shadow-3xl relative overflow-hidden">
-                <div id="contactSuccess" class="hidden text-center py-20 animate-slide-up">
-                    <div class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-10">
-                        <span class="text-4xl">✅</span>
-                    </div>
-                    <h3 class="text-3xl font-bold mb-6">Demande envoyée</h3>
-                    <p class="text-slate-500 font-medium">Un expert Amont vous recontactera sous 24h pour configurer votre accès pilote.</p>
+                <div class="mt-20 flex items-center gap-10 opacity-40">
+                    <div class="flex flex-col"><span class="text-2xl font-extrabold" id="waitlistCount">12</span><span class="text-[10px] font-black uppercase tracking-widest">Cabinets inscrits</span></div>
+                    <div class="h-10 w-[1px] bg-slate-200"></div>
+                    <div class="flex flex-col"><span class="text-2xl font-extrabold">78%</span><span class="text-[10px] font-black uppercase tracking-widest">Territoire IDF Verrouillé</span></div>
                 </div>
-                <form id="contactForm" class="space-y-8">
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Votre Nom</label>
-                            <input type="text" name="name" required placeholder="Jean Durand" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold focus:outline-none focus:ring-2 focus:ring-slate-200">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Email Pro</label>
-                            <input type="email" name="email" required placeholder="jean@cabinet.fr" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold focus:outline-none focus:ring-2 focus:ring-slate-200">
-                        </div>
-                    </div>
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Nom du Cabinet</label>
-                            <input type="text" name="firm_name" required placeholder="Cabinet Durand & Associés" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold focus:outline-none focus:ring-2 focus:ring-slate-200">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Code Postal</label>
-                            <input type="text" name="zip_code" required placeholder="75008" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold focus:outline-none focus:ring-2 focus:ring-slate-200">
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Message</label>
-                        <textarea name="message" rows={3} placeholder="Parlez-nous de vos objectifs..." class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold focus:outline-none focus:ring-2 focus:ring-slate-200"></textarea>
-                    </div>
-                    <button type="submit" id="submitBtn" class="w-full py-6 bg-slate-900 text-white rounded-2xl font-bold text-xl hover:bg-slate-800 transition-all hover:scale-[1.02] shadow-xl shadow-slate-200">
-                        Planifier ma démo
-                    </button>
-                </form>
             </div>
         </div>
     </section>
 
-    <footer class="py-20 border-t border-slate-100">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
-            <div class="flex items-center gap-3">
-                <div class="w-7 h-7 bg-slate-900 rounded-lg flex items-center justify-center text-white font-bold text-[10px]">A</div>
-                <span class="text-lg font-bold tracking-tight">Amont</span>
-            </div>
-            <p class="text-slate-400 text-sm font-medium">© 2026 Amont Intelligence. J+3 Pre-Registry Logic.</p>
-            <div class="flex items-center gap-8">
-                <a href="#" class="text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors">Confidentialité</a>
-                <a href="#" class="text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors">Conditions</a>
+    <section id="methode" class="py-32 md:py-48 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-24 items-center">
+                <div>
+                    <h2 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-8">L'avantage de 57 jours.</h2>
+                    <p class="text-xl text-slate-500 leading-relaxed mb-10 font-medium">La prospection traditionnelle se base sur le BODACC. Amont bypass le circuit public pour capturer l'intention dès le dépôt des statuts.</p>
+                </div>
+                <div class="bg-white p-12 rounded-[3rem] shadow-premium border border-slate-100">
+                    <div class="space-y-16">
+                        <div class="relative"><div class="flex justify-between items-end mb-4"><span class="text-xl font-bold">Amont J+3</span><span class="text-xs font-black uppercase tracking-widest text-emerald-600">Signal pré-Kbis</span></div><div class="w-full bg-slate-50 h-6 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 w-[5%] gap-chart-bar"></div></div></div>
+                        <div class="relative opacity-30"><div class="flex justify-between items-end mb-4"><span class="text-xl font-bold">Industrie J+60</span><span class="text-xs font-black uppercase tracking-widest">Alerte BODACC</span></div><div class="w-full bg-slate-50 h-6 rounded-full overflow-hidden"><div class="h-full bg-slate-300 w-full gap-chart-bar"></div></div></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </footer>
+    </section>
+
+    <section id="demo" class="py-32 md:py-48">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-24">
+                <h2 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-8">Détection Live.</h2>
+            </div>
+            <div id="signalsContainer" class="grid lg:grid-cols-2 gap-10"></div>
+        </div>
+    </section>
 
     <script>
-        async function fetchLeads() {
-            const container = document.getElementById('leadsContainer');
+        const zipForm = document.getElementById('zipForm');
+        const reservationForm = document.getElementById('reservationForm');
+        const leadForm = document.getElementById('leadForm');
+        const signalsContainer = document.getElementById('signalsContainer');
+        const waitlistCountEl = document.getElementById('waitlistCount');
+
+        zipForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            reservationForm.classList.remove('hidden');
+            zipForm.classList.add('hidden');
+        });
+
+        leadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            reservationForm.innerHTML = '<div class="text-center py-10"><h4 class="text-2xl font-extrabold mb-2">Demande enregistrée.</h4><p class="text-slate-500 font-bold">Un expert Amont vous recontactera.</p></div>';
+        });
+
+        async function fetchSignals() {
             try {
                 const res = await fetch('https://app.baget.ai/api/public/databases/88c0ef02-5c38-46d5-8c77-7c01986fbbd1/rows');
                 const data = await res.json();
-                const leads = data.rows;
-                
-                if (leads && leads.length > 0) {
-                    container.innerHTML = '<div class="flex flex-col gap-8">' + 
-                        leads.map(lead => `
-                            <div class="group p-8 bg-white border border-slate-100 rounded-[2rem] hover:border-slate-900 transition-all shadow-sm hover:shadow-xl animate-slide-up">
-                                <div class="flex justify-between items-start mb-6">
-                                    <div>
-                                        <div class="flex items-center gap-3 mb-1">
-                                            <h3 class="text-xl font-bold text-slate-900">${lead.data.company_name}</h3>
-                                            <span class="px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[10px] font-bold rounded uppercase">J+3</span>
-                                        </div>
-                                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">${lead.data.sector}</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <div class="text-2xl font-black text-slate-900 leading-none mb-1">${lead.data.score}</div>
-                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Score IA</p>
-                                    </div>
-                                </div>
-                                <div class="p-4 bg-slate-50 rounded-xl text-xs font-medium text-slate-600 leading-relaxed mb-6 border-l-2 border-slate-900">
-                                    ${lead.data.rationale}
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs font-bold text-slate-900">${lead.data.contact_cue} • ${lead.data.location}</span>
-                                    <button class="text-xs font-bold text-slate-400 hover:text-slate-900 transition-colors uppercase tracking-widest">Voir le dossier</button>
-                                </div>
-                            </div>
-                        `).join('') + '</div>';
+                const signals = data.rows;
+                if (signals) {
+                    signalsContainer.innerHTML = signals.slice(0, 4).map(s => `
+                        <div class="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm animate-slide-up">
+                            <h3 class="text-xl font-extrabold text-slate-900">${s.data.company_name}</h3>
+                            <p class="text-xs font-bold text-slate-400 uppercase mb-4">${s.data.sector}</p>
+                            <p class="text-xs font-bold text-slate-600 italic">${s.data.rationale}</p>
+                        </div>
+                    `).join('');
                 }
-            } catch (e) {
-                console.error('Fetch error', e);
-            }
+            } catch (err) {}
         }
-
-        document.getElementById('contactForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerText = 'Envoi...';
-            
-            const formData = new FormData(e.target);
-            const data = {
-                name: formData.get('name'),
-                email: formData.get('email'),
-                firm_name: formData.get('firm_name'),
-                zip_code: formData.get('zip_code'),
-                message: formData.get('message'),
-                timestamp: new Date().toISOString()
-            };
-
-            try {
-                await fetch('https://app.baget.ai/api/public/databases/835738a9-6c00-4668-878a-d581606b4a70/rows', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data })
-                });
-                document.getElementById('contactForm').classList.add('hidden');
-                document.getElementById('contactSuccess').classList.remove('hidden');
-            } catch (err) {
-                console.error(err);
-                btn.disabled = false;
-                btn.innerText = 'Réessayer';
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', fetchLeads);
+        fetchSignals();
     </script>
 </body>
 </html>
